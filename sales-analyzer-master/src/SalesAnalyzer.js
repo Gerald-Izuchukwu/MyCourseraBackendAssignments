@@ -52,13 +52,15 @@ const filterData = (fileContents, cb) => {
 const writeFilteredDataToFile = (filteredData, cb) => {
   try {
     //use writeFile method and write the filteredData in output.txt file
-
-    fs.writeFile('outPut.txt', filteredData, 'utf-8', (err=null, writeFileResults)=>{
-      writeFileResults = "Successfully wrote filtered data to output.txt file..!"
+    return new Promise((resolve, reject)=>{
+      const writefile = fs.createWriteStream('output.txt', 'utf-8')
+      writefile.write(filteredData)
+      let writeFileResult = "Successfully wrote filtered data to output.txt file..!"
+      resolve(cb(null, writeFileResult))
     })
   
   } catch (err) {
-    if (err){
+    if(err){
       console.log(err);
     }
   }

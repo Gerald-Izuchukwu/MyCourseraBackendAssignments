@@ -1,7 +1,6 @@
 
 //import all the require module
 const fs = require('fs')
-const Lodash = require('lodash')
 const {filter} = require('lodash')
 const csv = require('csv-parser')
 
@@ -25,7 +24,8 @@ const readFileContents = (fileName, cb) => {
       })
       .on('end', () => {
         fileContents.push(...tempContents);
-        resolve(fileContents);
+        resolve(cb(null, fileContents));
+
       })
       .on('error', (error) => {
         reject(error);

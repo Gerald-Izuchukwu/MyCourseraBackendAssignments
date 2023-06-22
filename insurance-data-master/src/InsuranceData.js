@@ -1,47 +1,74 @@
 //import all the modules require
-
-//Use try and catch to handle the error where ever required
-//return the callback with appropriate data where ever require in all the methods
-
-//More userdefined methods can be written if required to write the logical stuff
-
-//This method will take two parameters first the fileName
-//and second a callback 
-//read file data line by line using readLine
-//create array and push all data inside the array
-
+const fs = require('fs')
+const readline = require('readline')
+const csv = require('csv-parser')
+const lodash = require('lodash')
+const csvParser = require('csv-parser')
 
 const readFileContentsLineByLine = (fileName, cb) => {
  
+  return new Promise((resolve, reject)=>{
+    let fileContents = [];
 
+    const parseCSVData = (data) => {    
+      const parsedData = [];
+      
+      data.forEach((line) => {
+        const parsedLine = csvParser(line);
+        parsedData.push(parsedLine);
+      });
+      fs.createWriteStream('output.txt').write(JSON.stringify(parsedData))
+      return parsedData;
+    };
+
+    const readStream = fs.createReadStream(fileName)
+    const rl = readline.createInterface({
+      input: readStream,
+      output: process.stdout,
+      terminal: false
+    });
   
-  let fileContents = [];
+    rl.on('line', (line)=>{
+      fileContents.push(line)
+    })
+    rl.on('close', ()=>{
+      const parsedData = parseCSVData(fileContents)
+      resolve(cb(null, parsedData))
+    })
 
-  const rl = readline.createInterface({
-    input: fs.createReadStream(fileName),
-    output: process.stdout,
-    terminal: false
-  });
-
-
+    readStream.on('error', (error)=>{
+      reject(error)
+    })  
+  
+  })
+  
 }
 
-//This method will take two parameters first the filecontent
-//and second the callback 
-//use map to filter the data 
-//Filter all the records for female candidates given region as southwest.
-
 const filterFemaleCandidates = (fileContents, cb) => {
-  let filteredData ;
+  return new Promise((resolve, reject)=>{
+    let filteredData = fileContents.map((content)=>{
+      if(content.includes('female') && content.includes('southwest')){
+        return content
+      }
+      
+    })
 
-  //use lodash.compact() method if required
+    const finalData = lodash.compact(filteredData)
+    if(!filteredData){
+      const err = 'There is no error'
+      reject(err)
+    }
   
+    resolve(cb(null, finalData))
+  
+  })  
 }
 
 //This method will write filtered data in the output file
 const writeFilteredDataToFile = (outputFileName, filteredData, cb) => {
  
-    //use writeFile method to write the filteredData
+  const writtenData = fs.writeFileSync(outputFileName, filteredData)
+  cb(null, writtenData)
   
 }
 
@@ -49,15 +76,26 @@ const writeFilteredDataToFile = (outputFileName, filteredData, cb) => {
 //This method will read the file content using Streams
 //create array and push all the data from file to it
 
-
+const fileContents = []
 const readFileContentsUsingStream = (fileName, cb) => {
-  let fileContents = [];
+  return new Promise((resolve, reject)=>{
+    let tempContents = [];
 
-  fs.createReadStream(fileName)
-    .on("error", (err) => {
-      console.log("Error while reading contents of file using streams, ERROR::", err);
-      cb("Encountered error while reading file contents using streams..!");
-    })
+    fs.createReadStream(fileName).pipe(csv())
+      .on("error", (err) => {
+        console.log("Error while reading contents of file using streams, ERROR::", err);
+        cb("Encountered error while reading file contents using streams..!");
+        reject(err)
+      })
+      .on('data', (data)=>{
+        tempContents.push(data)
+      })
+      .on('end', ()=>{
+        fileContents.push(...tempContents)
+        resolve(cb(null, fileContents))
+      })
+  })
+
    
 }
 

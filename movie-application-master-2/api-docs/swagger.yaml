@@ -1,0 +1,41 @@
+swagger: "2.0"
+info:
+  title: Movies
+  description: Movies API
+  version: 1.0.0
+host: localhost:9300
+basePath: /api/v1
+schemes:
+  - http
+
+tags:
+  - name: Movies
+    description: Movies API
+
+paths: 
+  /movies:
+    get:
+      tags:
+        - all users 
+      summary:
+        Retrieve all users
+      security : []
+      responses:
+        '200':
+          description: Successful Operation
+    
+    post:
+      tags:
+        - create new user
+      summary:
+        create a new user
+        
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful Operation

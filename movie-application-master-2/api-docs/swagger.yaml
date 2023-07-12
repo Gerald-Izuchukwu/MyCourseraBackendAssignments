@@ -39,3 +39,56 @@ paths:
       responses:
         '200':
           description: Successful Operation
+    
+  /movies/:id:
+    get:
+      tags:
+        - get a single user
+      summary:
+        Get a particular user
+      security: []
+      responses:
+        '200':
+          description: Successful Operation
+    put:
+      tags:
+        - update a user's details
+      summary:
+        Update the profile of a user
+      security: []
+      responses: 
+        '204':
+          description: Successful Operation
+    
+    delete:
+      tags:
+        - delete a user's details
+      summary:
+        Delete the profile of a user
+      security: []
+      responses: 
+        '204':
+          description: Successful Operation
+          
+    patch:
+      tags:
+        - partially update  a user 
+      summary:
+        partially update a users details
+      security: []
+      responses:
+        '204':
+          description: Successful operation
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      

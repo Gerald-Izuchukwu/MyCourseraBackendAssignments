@@ -8,8 +8,9 @@ function verifyUser({email,password},userData){
   if(userData===undefined){
     return false
   }else {
-    if(email === userData.email && password === userData)
-    return true;
+    if(email === userData.email && password === userData){
+      return true;
+    }
   }
 }
 

@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const authController = require('./authController')
-
 //Registering User
 router.post('/register',(req,res)=>{
         try {
@@ -24,10 +23,6 @@ router.post('/register',(req,res)=>{
         } catch (err) {
                 res.status(400).send({err: 'Unexpected Error while registering the user', err})
         }
-
-        // authController.registerUser(userDetails,(err,result)=>{
-        
-        // })
 })
 
 //This method post will login the user once they are registered

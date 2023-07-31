@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 //Give the url for mongodb databse
-const url = "mongodb+srv://geraldlouisugwunna:426759813@cluster0.g5ktdxm.mongodb.net/userDb"
+const url = process.env.MONGO_URI
 const app = express()
 
 
